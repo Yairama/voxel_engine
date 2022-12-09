@@ -19,3 +19,15 @@ impl VoxelVisibilityType {
     }
 
 }
+
+#[derive(Component, Clone, Copy, Eq, PartialEq)]
+pub enum VoxelType{
+    BlockTypeDefault,
+    BlockTypeGrass,
+    BlockTypeDirt,
+    BlockTypeWater,
+    BlockTypeStone,
+    BlockTypeWood,
+    BlockTypeSand,
+    BlockTypeNumTypes
+   }
