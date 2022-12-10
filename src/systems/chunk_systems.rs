@@ -1,54 +1,40 @@
-use bevy::prelude::{Commands, UVec3, Mesh, shape::Cube, Color, StandardMaterial, Transform, PbrBundle, ResMut, Assets, default, Name};
+use bevy::prelude::{Commands, UVec3, Mesh, shape::Cube, Color, StandardMaterial, Transform, PbrBundle, ResMut, Assets, default, Name, debug};
+use block_mesh::ndshape::{ConstShape3u32, ConstShape};
 
 use crate::{bundles::chunk::{Chunk, CHUNK_SIZE_F32}, components::chunk_components::CartesianCoordinates};
 
-pub const WORLD_SIZE: usize = 2;
-
+pub const WORLD_SIZE: u32 = 2;
+pub type WorldShape = ConstShape3u32<WORLD_SIZE,WORLD_SIZE,WORLD_SIZE>;
 
 pub fn create_chunks(mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>){
 
-    let world_width = WORLD_SIZE;
-    let world_height = WORLD_SIZE;
-    let world_length = WORLD_SIZE;
+    debug!("Creating Chunks!");
 
-    let chunk_array = vec![vec![vec![Chunk::default();world_length];world_height];world_width];
+    let mut chunk_array = [Chunk::default();WorldShape::USIZE];
 
-    for i in 0..chunk_array.len(){
+    for i in 0..WorldShape::USIZE{
+        let a = WorldShape::delinearize(i as u32);
+        chunk_array[i].cartesian_coordinates = CartesianCoordinates(UVec3::from_array(a));
+    
+        
+        let mesh = Mesh::from(Cube::new(5.));
+        let material = StandardMaterial::from(Color::rgb(0.1,0.7,0.62));
+        let transform = Transform::from_xyz(
+            (a[0] as f32)*CHUNK_SIZE_F32,
+            (a[1] as f32)*CHUNK_SIZE_F32,
+            (a[2] as f32)*CHUNK_SIZE_F32
+        );
 
-        for j in 0..chunk_array[i].len(){
+        let pbr_bundle = PbrBundle{
+            mesh: meshes.add(mesh),
+            material: materials.add(material),
+            transform,
+            ..default()
+        };
 
-            for k in 0..chunk_array[i][j].len(){
-                let mut chunk = chunk_array[i][j][k];
-                chunk.cartesian_coordinates = CartesianCoordinates(
-                    UVec3::new(
-                        i as u32,
-                        j as u32,
-                        k as u32
-                    )
-                );
-
-                let mesh = Mesh::from(Cube::new(5.));
-                let material = StandardMaterial::from(Color::rgb(0.1,0.7,0.62));
-                let transform = Transform::from_xyz(
-                    (i as f32)*CHUNK_SIZE_F32,
-                    (j as f32)*CHUNK_SIZE_F32,
-                    (k as f32)*CHUNK_SIZE_F32
-                );
-
-                let pbr_bundle = PbrBundle{
-                    mesh: meshes.add(mesh),
-                    material: materials.add(material),
-                    transform,
-                    ..default()
-                };
-
-                commands.spawn((chunk,pbr_bundle, Name::new("Chunk")));
-            }
-
-        }
-
+        commands.spawn((chunk_array[i],pbr_bundle, Name::new("Chunk")));
     }
 
 

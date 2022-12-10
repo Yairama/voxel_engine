@@ -3,7 +3,6 @@ use block_mesh::ndshape::ConstShape3u32;
 
 use crate::components::{general_components::{DataBaseID}, chunk_components::{CartesianCoordinates, ChunkVisibility}};
 
-pub const CHUNK_SIZE_USIZE: usize = 32;
 pub const CHUNK_SIZE_U32: u32 = 32;
 pub const CHUNK_SIZE_F32: f32 = 32.;
 

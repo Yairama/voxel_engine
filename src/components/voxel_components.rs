@@ -9,7 +9,7 @@ impl VoxelVisibilityType {
     pub fn empty() -> Self {
         Self(VoxelVisibility::Empty)
     }
-
+    #[allow(dead_code)]
     pub fn translucent() -> Self {
         Self(VoxelVisibility::Translucent)
     }
@@ -19,15 +19,3 @@ impl VoxelVisibilityType {
     }
 
 }
-
-#[derive(Component, Clone, Copy, Eq, PartialEq)]
-pub enum VoxelType{
-    BlockTypeDefault,
-    BlockTypeGrass,
-    BlockTypeDirt,
-    BlockTypeWater,
-    BlockTypeStone,
-    BlockTypeWood,
-    BlockTypeSand,
-    BlockTypeNumTypes
-   }

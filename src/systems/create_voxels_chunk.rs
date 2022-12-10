@@ -1,33 +1,38 @@
 
-use bevy::{prelude::{Commands, Query, Entity, Mesh, PbrBundle, Assets, ResMut, Handle, default, Component, Added}, math::Vec3A, render::{render_resource::PrimitiveTopology, mesh::{VertexAttributeValues, Indices}}};
-use block_mesh::{ndshape::{ConstShape3u32, ConstShape}, VoxelVisibility, RIGHT_HANDED_Y_UP_CONFIG, GreedyQuadsBuffer, greedy_quads};
+use bevy::{prelude::{Commands, Query, Entity, Mesh, Assets, ResMut, Handle, default, Added}, math::Vec3A, render::{render_resource::PrimitiveTopology, mesh::{VertexAttributeValues, Indices}}};
+use block_mesh::{ndshape::{ ConstShape}, RIGHT_HANDED_Y_UP_CONFIG, GreedyQuadsBuffer, greedy_quads};
 
-use crate::{bundles::{chunk::{Chunk, CHUNK_SIZE_U32, ChunkShape}, voxel::Voxel}, components::{chunk_components::{CartesianCoordinates, ChunkVisibility}, general_components::{DataBaseID, EntityID}, voxel_components::VoxelVisibilityType}};
+use crate::{bundles::{chunk::{CHUNK_SIZE_U32, ChunkShape}, voxel::Voxel}, components::{chunk_components::{CartesianCoordinates, ChunkVisibility, VoxelArray}, general_components::{DataBaseID, EntityID}, voxel_components::VoxelVisibilityType}};
 
 
-
+#[allow(dead_code)]
 pub fn create_voxels_chunk(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
-    mut query: Query<(Entity,
+    query: Query<(Entity,
         &DataBaseID,
         &CartesianCoordinates,
         &ChunkVisibility
         )>){
-    
-    
 
     for (entity,
-        db_id,
-        cartesian_coordinates,
-        chunk_visibility
+        _db_id,
+        _cartesian_coordinates,
+        _chunk_visibility
     ) in query.iter(){
 
-        if *chunk_visibility == true{
+        if true{
 
-            // commands.entity(entity).remove::<Handle<Mesh>>();
-            let mesh = greedy_mesh(&mut meshes, entity);
+
+            let voxels = [
+                Voxel{ 
+                    chunk_id: EntityID(entity),
+                    voxel_visibility: VoxelVisibilityType::empty(),
+                    ..default() }; ChunkShape::USIZE];
+                
+            let mesh = greedy_mesh(&mut meshes, voxels);
             commands.entity(entity).insert(mesh);
+            commands.entity(entity).insert(VoxelArray(voxels.to_vec()));
 
         }                  
 
@@ -35,42 +40,46 @@ pub fn create_voxels_chunk(
 
 }
 
-pub fn create_voxels_for_new_chunk(mut commands: Commands,
+pub fn create_voxels_for_new_chunk<'a>(mut commands: Commands,
     query: Query<(Entity, &ChunkVisibility),
     Added<ChunkVisibility>>,
     mut meshes: ResMut<Assets<Mesh>>,
     ){
     
-    for (entity, chunk_visibility) in query.iter(){
+    for (entity, _chunk_visibility) in query.iter(){
+
+        let voxels = [
+        Voxel{ 
+            chunk_id: EntityID(entity),
+            voxel_visibility: VoxelVisibilityType::empty(),
+            ..default() }; ChunkShape::USIZE];
         
-        let mesh = greedy_mesh(&mut meshes, entity);
+        let mesh = greedy_mesh(&mut meshes, voxels);
         commands.entity(entity).insert(mesh);
+        commands.entity(entity).insert(VoxelArray(voxels.to_vec()));
+
     }
 
 }
 
-
+#[allow(dead_code)]
 fn into_domain(array_dim: u32, [x, y, z]: [u32; 3]) -> Vec3A {
     (2.0/ array_dim as f32) * Vec3A::new(x as f32, y as f32, z as f32) - 1.0
 }
 
+#[allow(dead_code)]
 fn sphere(radius: f32, p: Vec3A) -> VoxelVisibilityType {
-    if(p.length() < radius){
+    if p.length() < radius{
         VoxelVisibilityType::opaque()
     }else {
         VoxelVisibilityType::empty()
     }
 }
 
-fn greedy_mesh(meshes: &mut Assets<Mesh>, entity: Entity) -> Handle<Mesh>{
-
-
-
-    let mut voxels = [
-        Voxel{ 
-            chunk_id: EntityID(entity),
-            voxel_visibility: VoxelVisibilityType::empty(),
-            ..default() }; ChunkShape::USIZE];
+fn greedy_mesh(
+    meshes: &mut Assets<Mesh>,
+    mut voxels: [Voxel; ChunkShape::USIZE]
+    ) -> Handle<Mesh>{
 
     for z in 1..31{
         for y in 1..31{
@@ -81,7 +90,7 @@ fn greedy_mesh(meshes: &mut Assets<Mesh>, entity: Entity) -> Handle<Mesh>{
         }
     }
 
-    /// Code for generate Sphere
+    // Code to generate Sphere
     // for i in 0u32..(ChunkShape::SIZE) {
     //     let p = into_domain(31, ChunkShape::delinearize(i));
     //     voxels[i as usize].voxel_visibility = sphere(0.9,p);
@@ -99,6 +108,8 @@ fn greedy_mesh(meshes: &mut Assets<Mesh>, entity: Entity) -> Handle<Mesh>{
         &faces,
         &mut buffer,
     );
+
+
 
     let num_indices = buffer.quads.num_quads() * 6;
     let num_vertices = buffer.quads.num_quads() * 4;
@@ -127,6 +138,8 @@ fn greedy_mesh(meshes: &mut Assets<Mesh>, entity: Entity) -> Handle<Mesh>{
         VertexAttributeValues::Float32x2(vec![[0.0; 2]; num_vertices]),
     );
     render_mesh.set_indices(Some(Indices::U32(indices.clone())));
+
+    println!("Voxel len {}", voxels.len());
 
     meshes.add(render_mesh)
 

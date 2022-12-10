@@ -1,6 +1,12 @@
 use bevy::{prelude::{Commands, Camera3dBundle, ResMut, Transform, Vec3, default, AmbientLight, Color}, pbr::wireframe::WireframeConfig};
 use bevy_flycam::FlyCam;
 
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+pub enum AppState {
+    Loading,
+    Run,
+}
+
 
 
 pub fn startup_system(mut commands: Commands, mut wireframe_config: ResMut<WireframeConfig>,){
@@ -13,7 +19,7 @@ pub fn startup_system(mut commands: Commands, mut wireframe_config: ResMut<Wiref
     });
     
     commands.spawn(Camera3dBundle {
-        transform: Transform::from_xyz(0., 100., 0.).looking_at(Vec3::new(10., 10., 10.), Vec3::Y),
+        transform: Transform::from_xyz(0., 10., 0.).looking_at(Vec3::new(0., 0., 0.), Vec3::Y),
         ..default()
     }).insert(FlyCam);
 

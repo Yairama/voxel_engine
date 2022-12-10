@@ -1,5 +1,7 @@
 use bevy::prelude::{Component, UVec3};
 
+use crate::bundles::{voxel::Voxel};
+
 
 #[derive(Component, Clone, Copy, Eq, PartialEq)]
 pub struct CartesianCoordinates(pub UVec3);
@@ -15,3 +17,6 @@ impl PartialEq<bool> for ChunkVisibility {
         self.0 == *other
     }
 }
+
+#[derive(Component, Clone, Eq, PartialEq)]
+pub struct VoxelArray(pub Vec<Voxel>);
