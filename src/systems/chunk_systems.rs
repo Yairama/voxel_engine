@@ -3,10 +3,10 @@ use block_mesh::ndshape::{ConstShape3u32, ConstShape};
 
 use crate::{bundles::chunk::{Chunk, CHUNK_SIZE_F32}, components::chunk_components::CartesianCoordinates};
 
-pub const WORLD_SIZE: u32 = 2;
+pub const WORLD_SIZE: u32 = 20;
 pub type WorldShape = ConstShape3u32<WORLD_SIZE,WORLD_SIZE,WORLD_SIZE>;
 
-pub fn create_chunks(mut commands: Commands,
+pub fn create_chunks_not_optimal(mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>){
 
@@ -34,8 +34,12 @@ pub fn create_chunks(mut commands: Commands,
             ..default()
         };
 
-        commands.spawn((chunk_array[i],pbr_bundle, Name::new("Chunk")));
+        commands.spawn((chunk_array[i],pbr_bundle));
     }
 
+    
 
 }
+
+
+

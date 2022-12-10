@@ -2,7 +2,7 @@ use crate::Component;
 use bevy::prelude::Entity;
 
 #[derive(Component, Clone, Copy, Eq, PartialEq)]
-pub struct DataBaseID(pub i32);
+pub struct DataBaseID(pub u32);
 
 impl Default for DataBaseID {
     fn default() -> Self {

@@ -7,7 +7,7 @@ mod utils;
 use bevy::{prelude::*, pbr::wireframe::WireframePlugin, diagnostic::{LogDiagnosticsPlugin, FrameTimeDiagnosticsPlugin}};
 use bevy_flycam::{MovementSettings, NoCameraPlayerPlugin};
 use bevy_inspector_egui::WorldInspectorPlugin;
-use systems::{startup::startup_system, chunk_systems::{create_chunks}, create_voxels_chunk::{create_voxels_chunk, create_voxels_for_new_chunk}};
+use systems::{startup::{startup_system, AppState, load_assets, check_loaded}, chunk_systems::{create_chunks_not_optimal}, create_voxels_chunk::{create_voxels_chunk, create_voxels_for_new_chunk}};
 
 
 pub const WIDTH: f32 = 1280.0;
@@ -35,10 +35,18 @@ fn main() {
     .add_plugin(WorldInspectorPlugin::new())
     .add_plugin(NoCameraPlayerPlugin)
     .add_plugin(WireframePlugin)
-    .add_startup_system(startup_system)
-    .add_startup_system(create_chunks)
-    .add_system(create_voxels_for_new_chunk)
-    // .add_system(create_voxels_chunk)
+    .insert_resource(State::new(AppState::Loading))
+    .add_state(AppState::Loading)
+    .add_system_set(SystemSet::on_enter(AppState::Loading).with_system(load_assets))
+    .add_system_set(SystemSet::on_update(AppState::Loading).with_system(check_loaded))
+    .add_system_set(SystemSet::on_enter(AppState::Run).with_system(startup_system))
+    .add_system_set(SystemSet::on_enter(AppState::Run).with_system(create_chunks_not_optimal))
+    .add_system_set(SystemSet::on_update(AppState::Run).with_system(create_voxels_for_new_chunk))
+
+    // .add_startup_system(startup_system)
+    // .add_startup_system(create_chunks)
+    // .add_system(create_voxels_for_new_chunk)
+    // .add_system(create_voxels_chunk)****
     .add_plugin(LogDiagnosticsPlugin::default())
     .add_plugin(FrameTimeDiagnosticsPlugin::default())
 
