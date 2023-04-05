@@ -8,22 +8,16 @@ Watch a video of it in action [here](https://youtu.be/TNeYpkMFogI)
 
 <p>
   <a href="https://www.linkedin.com/in/yairama/" rel="nofollow noreferrer">
-    <img src="https://i.stack.imgur.com/gVE0j.png" alt="linkedin" class="icon"> LinkedIn
+    <img src="https://i.stack.imgur.com/gVE0j.png" alt="linkedin" class="icon" width="20" height="20"> LinkedIn
   </a> &nbsp; 
   <a href="https://github.com/Yairama" rel="nofollow noreferrer">
-    <img src="https://i.stack.imgur.com/tskMh.png" alt="github" class="icon"> Github
+    <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="github" class="icon" width="20" height="20"> Github
   </a> &nbsp; 
   <a href="https://github.com/Yairama" rel="nofollow noreferrer">
-    <img src="https://cdn-icons-png.flaticon.com/512/5968/5968853.png" alt="gitlab" class="icon"> Gitlab
+    <img src="https://cdn-icons-png.flaticon.com/512/5968/5968853.png" alt="gitlab" class="icon" width="20" height="20"> Gitlab
   </a>
 </p>
 
-<style>
-  .icon {
-    width: 15px;
-    height: 15px;
-  }
-</style>
 ![Project image](/images/readme_image.png?raw=true "Project image")
 
 ## Instructions
