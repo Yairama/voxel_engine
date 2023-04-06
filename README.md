@@ -4,7 +4,9 @@ This is a voxel engine project that uses the [block-mesh-rs](https://github.com/
 
 The goal of this exercise is to be able to run mining block models.
 
-Watch a video of it in action [here](https://youtu.be/TNeYpkMFogI)
+This is:
+
+
 
 <p>
   <a href="https://www.linkedin.com/in/yairama/" rel="nofollow noreferrer">
