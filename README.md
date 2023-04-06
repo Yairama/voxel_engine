@@ -15,7 +15,7 @@ This is:
   <a href="https://github.com/Yairama" rel="nofollow noreferrer">
     <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="github" class="icon" width="20" height="20"> Github
   </a> &nbsp; 
-  <a href="https://github.com/Yairama" rel="nofollow noreferrer">
+  <a href="https://gitlab.com/Yairama" rel="nofollow noreferrer">
     <img src="https://cdn-icons-png.flaticon.com/512/5968/5968853.png" alt="gitlab" class="icon" width="20" height="20"> Gitlab
   </a>
 </p>
